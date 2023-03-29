@@ -11,7 +11,8 @@ Globals:
 
 Parameters:
   AppVersion:
-    Type: String    
+    Type: String
+    Default: latest    
 
 Resources:
   GoReleaserExampleFunction:
