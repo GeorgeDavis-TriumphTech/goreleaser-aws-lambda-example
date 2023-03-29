@@ -14,6 +14,10 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# macOS
 dist/
 .DS_Store
 .dccache
+
+# SAM CLI
+**/.aws-sam
