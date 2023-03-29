@@ -41,9 +41,7 @@ archives:
     # Archive name template.
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_
-      {{- if .Arm }}v{{ .Arm }}_{{- end }}
-      v{{ .Version }}
+      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
     # wrap_in_directory: true
