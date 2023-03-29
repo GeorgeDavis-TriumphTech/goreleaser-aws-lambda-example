@@ -20,7 +20,6 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
-resolve_s3 = true
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1vvjrqhfrldd6"
 s3_prefix = "goreleaser-aws-lambda-example"
 region = "us-east-1"
