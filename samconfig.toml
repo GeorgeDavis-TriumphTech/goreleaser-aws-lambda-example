@@ -26,10 +26,6 @@ s3_prefix = "goreleaser-aws-lambda-example"
 region = "us-east-1"
 image_repositories = []
 
-[default.package]
-[default.package.parameters]
-resolve_s3 = true
-
 [default.sync]
 [default.sync.parameters]
 watch = true
