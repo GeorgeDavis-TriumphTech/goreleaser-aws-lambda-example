@@ -3,6 +3,7 @@ project_name: lambda-go-hello-world
 
 env:
   - CGO_ENABLED=0
+  - GITHUB_RUN_ATTEMPT={{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
 builds:
   # You can have multiple builds defined as a yaml list
@@ -41,7 +42,8 @@ archives:
     # Archive name template.
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}
+      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}-
+      {{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
     # wrap_in_directory: true
