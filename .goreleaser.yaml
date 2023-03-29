@@ -45,7 +45,7 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64_
       {{- else if eq .Arch "386" }}i386_
       {{- else }}{{ .Arch }}_{{ end }}
-      v{{ .Version }}
+      {{ .Tag }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
     # wrap_in_directory: true
