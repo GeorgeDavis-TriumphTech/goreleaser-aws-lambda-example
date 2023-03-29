@@ -25,6 +25,7 @@ builds:
     # Defaults are 386, amd64 and arm64.
     goarch:
       - arm64
+      - amd64
 
 archives:
   -
@@ -42,7 +43,11 @@ archives:
     # Archive name template.
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}
+      {{ .ProjectName }}_{{ .Os }}_
+      {{- if eq .Arch "amd64"}}x86_64
+      {{- else if eq .Arch "386"}}i386
+      {{- else}}{{ .Arch }}{{- end }}
+      _v{{ .Version }}
       {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
