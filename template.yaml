@@ -10,7 +10,7 @@ Globals:
     MemorySize: 128
 
 Parameters:
-  APP_VERSION:
+  AppVersion:
     Type: String    
 
 Resources:
@@ -24,7 +24,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          APP_VERSION: !Ref APP_VERSION
+          APP_VERSION: !Ref AppVersion
 
 Outputs:
   GoReleaserExampleFunction:
