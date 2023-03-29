@@ -42,8 +42,8 @@ archives:
     # Archive name template.
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}-
-      {{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
+      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}_v{{ .Version }}
+      {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
     # wrap_in_directory: true
@@ -95,7 +95,7 @@ release:
 
   # Header template for the release body.
   header: |
-    ## Release v{{.Version}} ({{ .Date }})
+    ## Release v{{.Version}}{{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }} ({{ .Date }})
 
     Here is a summary of all the new changes in this new release.
 
@@ -107,8 +107,8 @@ release:
 
 checksum:
   name_template: >-
-    checksums_v{{ .Version }}-
-    {{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
+    checksums_v{{ .Version }}
+    {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
     .txt
 
 changelog:
