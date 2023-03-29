@@ -48,9 +48,9 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64_
       {{- else if eq .Arch "amd64_v1" }}x86_64_
       {{- else if eq .Arch "386" }}i386_
-      {{- else }}{{ .Arch }}_{{ end }}
+      {{- else }}{{ .Arch }}_{{- end }}
       {{- if .Arm }}v{{ .Arm }}_{{ end }}
-      {{- v{{ .Version }} 
+      {{- if .Version }}v{{ .Version }}{{- end }}
       {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
     # Set this to true if you want all files in the archive to be in a single directory.
