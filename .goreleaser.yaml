@@ -79,6 +79,10 @@ release:
     owner: GeorgeDavis-TriumphTech
     name: lambda-go-hello-world
 
+  # You can change the name of the release.
+  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
+  name_template: "{{.ProjectName}}-v{{.Version}}"
+
   ids:
     - archive
 
@@ -97,33 +101,41 @@ release:
   # - `replace`: replace existing notes
   #
   # Default is `keep-existing`.
-  mode: append
+  mode: prepend
 
   # Header template for the release body.
-  # Defaults to empty.
   header: |
-    ## Some title ({{ .Date }})
+    ## Release v{{.Version}} ({{ .Date }})
 
-    Welcome to this new release!
+    Here is a summary of all the new changes in this new release.
 
   # Footer template for the release body.
-  # Defaults to empty.
   footer: |
-    ## Thanks!
+    ## Credits 
+    
+    Thank you for your contribution.
 
-    Those were the changes on {{ .Tag }}!
+checksum:
+  name_template: 'checksums.txt'
 
-  # You can change the name of the release.
-  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
-  name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
-
-# checksum:
-#   name_template: 'checksums.txt'
-# snapshot:
-#   name_template: "{{ incpatch .Version }}-next"
-# changelog:
-#   sort: asc
-#   filters:
-#     exclude:
-#       - '^docs:'
-#       - '^test:'
+changelog:
+  sort: asc
+  # Group commits messages by given regex and title.
+  groups:
+    - title: Features
+      regexp: '^.*?(feat|refactor)(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug fixes'
+      regexp: '^.*?(bug|fix)(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: DevOps
+      regexp: '^.*?(ci|build|devops)(\([[:word:]]+\))??!?:.+$'
+      order: 90
+    - title: Docs
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 95
+    - title: Others
+      order: 100
+  filters:
+    exclude:
+      - '^test:'
