@@ -1,1 +1,1 @@
-# lambda-go-hello-world
+# goreleaser-aws-lambda-example

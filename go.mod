@@ -1,4 +1,4 @@
-module lambda-go-hello-world
+module goreleaser-aws-lambda-example
 
 go 1.19
 

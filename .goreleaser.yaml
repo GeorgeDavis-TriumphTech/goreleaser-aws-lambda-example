@@ -1,5 +1,5 @@
 # Make sure to check the documentation at https://goreleaser.com
-project_name: lambda-go-hello-world
+project_name: goreleaser-aws-lambda-example
 
 env:
   - CGO_ENABLED=0
@@ -49,7 +49,7 @@ archives:
       {{- else if eq .Arch "amd64_v1" }}x86_64_
       {{- else if eq .Arch "386" }}i386_
       {{- else }}{{ .Arch }}_{{- end }}
-      {{- if .Arm }}v{{ .Arm }}_{{ end }}
+      {{- if .Arm }}v{{ .Arm }}_{{- end }}
       {{- if .Version }}v{{ .Version }}{{- end }}
       {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
 
@@ -75,7 +75,7 @@ release:
   # Default is extracted from the origin remote URL or empty if its private hosted.
   github:
     owner: GeorgeDavis-TriumphTech
-    name: lambda-go-hello-world
+    name: goreleaser-aws-lambda-example
 
   # You can change the name of the release.
   # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
