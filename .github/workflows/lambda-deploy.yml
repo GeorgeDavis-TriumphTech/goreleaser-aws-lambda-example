@@ -12,10 +12,15 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# These permissions are needed for the job to interact with GitHub's OIDC Token endpoint.
 permissions:
-  contents: write
+  contents: write  
+  id-token: write
   # packages: write
   # issues: write
+
+env:
+  SAM_CLI_TELEMETRY: 0
 
 jobs:
   goreleaser:
@@ -64,3 +69,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+
+      - name: List Build artifacts
+        run: ls -alrt .
+
+      - name: Setup Python for SAM CLI
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: "3.8"
+
+      - name: Setup AWS SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::703730886047:role/github-actions-georgedavis-triumphtech
+
+      - name: Validate SAM template
+        run: sam validate --lint
+
+      - name: SAM Build
+        run: sam build # --use-container
+
+      - name: SAM Deploy
+        run: "sam deploy --config-env default --no-confirm-changeset --no-fail-on-empty-changeset"
