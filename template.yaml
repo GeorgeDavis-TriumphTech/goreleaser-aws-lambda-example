@@ -12,7 +12,10 @@ Globals:
 Parameters:
   AppVersion:
     Type: String
-    Default: latest    
+    Default: latest  
+  AppName:
+    Type: String
+    Default: app-name  
 
 Resources:
   GoReleaserExampleFunction:
@@ -26,6 +29,7 @@ Resources:
       Environment:
         Variables:
           APP_VERSION: !Ref AppVersion
+          APP_NAME: !Ref AppName
 
 Outputs:
   GoReleaserExampleFunction:

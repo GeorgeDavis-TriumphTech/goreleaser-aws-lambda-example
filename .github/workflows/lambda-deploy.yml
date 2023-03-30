@@ -60,6 +60,16 @@ jobs:
       - name: Run tests
         run: go test -race -vet=off ./...
 
+      - name: Retreive GitHub Repo name
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+        id: split
+        run: echo "::set-output name=fragment::${GITHUB_REPO##*/}"
+
+      - name: GITHUB_REPO
+        run: |
+          echo ${{ steps.split.outputs.fragment }}
+
       - name: Run Go Releaser
         uses: goreleaser/goreleaser-action@v4
         with:
@@ -94,4 +104,4 @@ jobs:
         run: sam build # --use-container
 
       - name: SAM Deploy
-        run: "sam deploy --config-env default --parameter-overrides ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} --no-confirm-changeset --no-fail-on-empty-changeset"
+        run: "sam deploy --config-env default --parameter-overrides ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.split.outputs.fragment }} --no-confirm-changeset --no-fail-on-empty-changeset"

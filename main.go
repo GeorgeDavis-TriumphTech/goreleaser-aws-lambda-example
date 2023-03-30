@@ -17,7 +17,7 @@ func main() {
 // 'handler' will change the inputs & outputs depending on the type of event you trying to handle
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	// Logging a simple message to the console, which will display in the AWS Console
-	log.Println("Hello World! This is " + os.Getenv("APP_VERSION"))
+	log.Println("Hello World! This is " + os.Getenv("APP_NAME") + "_" + os.Getenv("APP_VERSION"))
 
 	// Creating our response with a status code of 200
 	response := events.APIGatewayProxyResponse{
