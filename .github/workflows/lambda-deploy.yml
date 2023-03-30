@@ -80,11 +80,11 @@ jobs:
       - name: Get Archive Path
         id: archive-path
         run: |
-          jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json
+          jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json
 
       - name: Print Archive Path
         run: |
-          echo ${{ steps.archive-path.outputs.stdout }}
+          echo ${{ steps.archive-path.outputs }}
 
       - name: List Build artifacts
         run: ls -alrt ./dist
