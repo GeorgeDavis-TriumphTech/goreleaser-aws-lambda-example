@@ -81,6 +81,10 @@ jobs:
         run: |
           echo ${{ steps.goreleaser.outputs.artifacts }}
 
+      - name: Print GoReleaser Metadata JSON
+        run: |
+          echo ${{ steps.goreleaser.outputs.metadata }}
+
       - name: List Build artifacts
         run: ls -alrt ./dist
 
