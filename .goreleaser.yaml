@@ -114,10 +114,7 @@ release:
     Thank you for your contribution.
 
 checksum:
-  name_template: >-
-    checksums_v{{ .Version }}
-    {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
-    .txt
+  name_template: checksums_v{{ .Version }}{{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}.txt
 
 changelog:
   sort: asc
