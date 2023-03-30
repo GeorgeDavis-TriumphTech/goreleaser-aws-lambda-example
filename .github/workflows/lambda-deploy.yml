@@ -66,10 +66,6 @@ jobs:
         id: split
         run: echo "::set-output name=fragment::${GITHUB_REPO##*/}"
 
-      - name: GITHUB_REPO
-        run: |
-          echo ${{ steps.split.outputs.fragment }}
-
       - name: Run Go Releaser
         uses: goreleaser/goreleaser-action@v4
         with:
