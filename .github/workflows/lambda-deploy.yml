@@ -67,6 +67,7 @@ jobs:
         run: echo "::set-output name=fragment::${GITHUB_REPO##*/}"
 
       - name: Run Go Releaser
+        id: goreleaser
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
@@ -75,6 +76,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+
+      - name: Print GoReleaser Artifacts JSON
+        run: |
+          echo ${{ steps.goreleaser.outputs.artifacts }}
 
       - name: List Build artifacts
         run: ls -alrt ./dist
