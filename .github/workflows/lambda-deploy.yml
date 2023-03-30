@@ -80,7 +80,7 @@ jobs:
       - name: Get Archive Path
         id: archive-path
         run: |
-          cat artifacts.json | jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]'
+          cat dist/artifacts.json | jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]'
 
       - name: Print Archive Path
         run: |
