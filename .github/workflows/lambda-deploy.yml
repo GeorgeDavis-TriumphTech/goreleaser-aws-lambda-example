@@ -80,7 +80,7 @@ jobs:
       - name: Get Archive Path
         id: buildpath
         run: |
-          jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json
+          echo "`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json`"
 
       - name: Print Archive Path
         run: |
