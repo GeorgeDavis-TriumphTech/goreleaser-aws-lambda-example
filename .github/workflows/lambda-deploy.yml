@@ -78,16 +78,13 @@ jobs:
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
       - name: Get Archive Path
-        id: archive-path
+        id: buildpath
         run: |
           jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json
 
       - name: Print Archive Path
         run: |
-          echo ${{ steps.archive-path.outputs }}
-
-      - name: List Build artifacts
-        run: ls -alrt ./dist
+          echo ${{ steps.buildpath.outputs.stdout }}
 
       - name: Setup Python for SAM CLI
         uses: actions/setup-python@v4.5.0
