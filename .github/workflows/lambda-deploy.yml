@@ -71,7 +71,7 @@ jobs:
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
       - name: List Build artifacts
-        run: ls -alrt .
+        run: ls -alrt ./dist
 
       - name: Setup Python for SAM CLI
         uses: actions/setup-python@v4.5.0
