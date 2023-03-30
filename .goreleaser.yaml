@@ -3,7 +3,6 @@ project_name: goreleaser-aws-lambda-example
 
 env:
   - CGO_ENABLED=0
-  - GITHUB_RUN_ATTEMPT={{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- else }}0{{- end }}
 
 builds:
   # You can have multiple builds defined as a yaml list
@@ -24,7 +23,6 @@ builds:
     # GOARCH to build for. For more info refer to: https://golang.org/doc/install/source#environment
     # Defaults are 386, amd64 and arm64.
     goarch:
-      - arm64
       - amd64
 
 archives:
@@ -50,93 +48,3 @@ archives:
       {{- else if eq .Arch "386" }}i386_
       {{- else }}{{ .Arch }}_{{- end }}
       {{- if .Arm }}v{{ .Arm }}_{{- end }}
-      {{- if .Version }}v{{ .Version }}{{- end }}
-      {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
-
-    # Set this to true if you want all files in the archive to be in a single directory.
-    # wrap_in_directory: true
-
-    # If set to true, will strip the parent directories away from binary files and flatten the directories within the archive.
-    # strip_parent_binary_folder: true
-
-    # Additional files/template/globs you want to add to the archive.
-    # Defaults are any files matching `LICENSE*`, `README*`, `CHANGELOG*`, `license*`, `readme*` and `changelog*`.
-    # files:
-    #   - none*
-
-    # Disables the binary count check. Default: false
-    # allow_different_binary_count: true
-
-    # This will make the destination paths be relative to the longest common path prefix between all the files matched and the source glob.
-    # rlcp: true
-
-release:
-  # Repo in which the release will be created.
-  # Default is extracted from the origin remote URL or empty if its private hosted.
-  github:
-    owner: GeorgeDavis-TriumphTech
-    name: goreleaser-aws-lambda-example
-
-  # You can change the name of the release.
-  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
-  name_template: "{{.ProjectName}}-v{{.Version}}"
-
-  ids:
-    - archive
-
-  # If set to auto, will mark the release as not ready for production
-  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
-  # If set to true, will mark the release as not ready for production.
-  # Default is false.
-  prerelease: auto
-
-  # What to do with the release notes in case there the release already exists.
-  #
-  # Valid options are:
-  # - `keep-existing`: keep the existing notes
-  # - `append`: append the current release notes to the existing notes
-  # - `prepend`: prepend the current release notes to the existing notes
-  # - `replace`: replace existing notes
-  #
-  # Default is `keep-existing`.
-  mode: prepend
-
-  # Header template for the release body.
-  header: |
-    ## Release v{{.Version}}{{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }} ({{ .Date }})
-
-    Here is a summary of all the new changes in this new release.
-
-  # Footer template for the release body.
-  footer: |
-    ## Credits 
-    
-    Thank you for your contribution.
-
-checksum:
-  name_template: >-
-    checksums_v{{ .Version }}
-    {{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
-    .txt
-
-changelog:
-  sort: asc
-  # Group commits messages by given regex and title.
-  groups:
-    - title: Features
-      regexp: '^.*?(feat|refactor)(\([[:word:]]+\))??!?:.+$'
-      order: 0
-    - title: 'Bug fixes'
-      regexp: '^.*?(bug|fix)(\([[:word:]]+\))??!?:.+$'
-      order: 1
-    - title: DevOps
-      regexp: '^.*?(ci|build|devops)(\([[:word:]]+\))??!?:.+$'
-      order: 90
-    - title: Docs
-      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
-      order: 95
-    - title: Others
-      order: 100
-  filters:
-    exclude:
-      - '^test:'
