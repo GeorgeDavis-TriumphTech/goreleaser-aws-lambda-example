@@ -80,7 +80,7 @@ jobs:
       - name: Get Archive Path
         id: archive-path
         run: |
-          apt install jq -y && cat artifacts.json | jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]'
+          cat artifacts.json | jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]'
 
       - name: Print Archive Path
         run: |
