@@ -3,7 +3,7 @@ project_name: goreleaser-aws-lambda-example
 
 env:
   - CGO_ENABLED=0
-  - GITHUB_RUN_ATTEMPT={{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}
+  - GITHUB_RUN_ATTEMPT={{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- else }}0{{- end }}
 
 builds:
   # You can have multiple builds defined as a yaml list
