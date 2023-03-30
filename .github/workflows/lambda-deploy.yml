@@ -77,13 +77,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
-      - name: Print GoReleaser Artifacts JSON
+      - name: Get Archive Path
+        id: archive-path
         run: |
-          echo ${{ steps.goreleaser.outputs.artifacts }}
+          apt install jq -y && cat artifacts.json | jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]'
 
-      - name: Print GoReleaser Metadata JSON
+      - name: Print Archive Path
         run: |
-          echo ${{ steps.goreleaser.outputs.metadata }}
+          echo ${{ steps.archive-path.outputs.stdout }}
 
       - name: List Build artifacts
         run: ls -alrt ./dist
