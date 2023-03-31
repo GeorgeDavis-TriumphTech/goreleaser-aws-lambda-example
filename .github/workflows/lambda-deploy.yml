@@ -63,8 +63,8 @@ jobs:
       - name: Retreive GitHub Repo name
         env:
           GITHUB_REPO: ${{ github.repository }}
-        id: split
-        run: echo "::set-output name=fragment::${GITHUB_REPO##*/}"
+        id: splitstr
+        run: echo "{fragment}=${GITHUB_REPO##*/}" >> $GITHUB_OUTPUT
 
       - name: Run Go Releaser
         id: goreleaser
@@ -80,11 +80,12 @@ jobs:
       - name: Get Archive Path
         id: buildpath
         run: |
-          echo "`jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json`" >> $GITHUB_OUTPUT
+          export buildpath=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json`
+          echo "{buildpath}={$buildpath}" >> $GITHUB_OUTPUT
 
       - name: Print Archive Path
         run: |
-          echo ${{ steps.buildpath.outputs.stdout }}
+          echo ${{ steps.buildpath.outputs.buildpath }}
 
       - name: Setup Python for SAM CLI
         uses: actions/setup-python@v4.5.0
@@ -107,4 +108,4 @@ jobs:
         run: sam build # --use-container
 
       - name: SAM Deploy
-        run: "sam deploy --config-env default --parameter-overrides ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.split.outputs.fragment }} --no-confirm-changeset --no-fail-on-empty-changeset"
+        run: "sam deploy --config-env default --parameter-overrides ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.fragment }} --no-confirm-changeset --no-fail-on-empty-changeset"
