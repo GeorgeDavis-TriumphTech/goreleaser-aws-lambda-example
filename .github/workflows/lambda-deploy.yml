@@ -66,6 +66,9 @@ jobs:
         id: splitstr
         run: echo "{fragment}=${GITHUB_REPO##*/}" >> $GITHUB_OUTPUT
 
+      - name: Print GitHub Repo name        
+        run: echo "${{ steps.splitstr.outputs.fragment }}"
+
       - name: Run Go Releaser
         id: goreleaser
         uses: goreleaser/goreleaser-action@v4
