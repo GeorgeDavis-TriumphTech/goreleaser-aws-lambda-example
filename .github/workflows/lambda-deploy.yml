@@ -113,5 +113,4 @@ jobs:
           sam deploy --config-env default --parameter-overrides \ 
           ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} \
           ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} \
-          ParameterKey=AppReleaseFileName,ParameterValue=${{ steps.zipname.outputs.built_file }} \
           --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
