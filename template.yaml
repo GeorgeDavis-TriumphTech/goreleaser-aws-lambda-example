@@ -35,11 +35,7 @@ Resources:
         Variables:
           APP_VERSION: !Ref AppVersion
           APP_NAME: !Ref AppName
-          APP_RELEASE: !Join
-          - '/'
-          - - '.'
-            - !Ref AppReleaseFolder
-            - !Ref AppReleaseFileName
+          APP_RELEASE: !Sub "./${AppReleaseFolder}/${AppReleaseFileName}"
 
 Outputs:
   GoReleaserExampleFunction:
