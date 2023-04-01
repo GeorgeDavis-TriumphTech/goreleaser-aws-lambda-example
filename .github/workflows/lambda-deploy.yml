@@ -80,7 +80,7 @@ jobs:
       - name: Get Archive Path
         id: buildpath
         run: |
-          jq -c 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json > raw_dist_path
+          jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json > raw_dist_path
           sed 's/\//\\\//g' raw_dist_path > dist_path
           echo "built_path=`cat dist_path`" >> $GITHUB_OUTPUT
 
