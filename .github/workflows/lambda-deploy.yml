@@ -99,14 +99,14 @@ jobs:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::703730886047:role/github-actions-georgedavis-triumphtech
 
-      - name: Validate SAM template
-        run: sam validate --lint
-
       - name: SAM Build
         run: sam build # --use-container
 
       - name: SAM Package
-        run: sam package --config-env default > packaged-template.yml
+        run: sam package --config-env default > packaged-template.yaml
+
+      - name: Validate SAM template
+        run: sam validate --lint --template-file packaged-template.yaml
 
       - name: SAM Deploy
         run: |
@@ -114,4 +114,4 @@ jobs:
           AppVersion=${{ github.ref_name }}-${{ github.run_attempt }} \
           AppName=${{ steps.splitstr.outputs.repo_name }} \
           AppReleaseFileName=${{ steps.zipname.outputs.built_file }} \
-          --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yml
+          --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
