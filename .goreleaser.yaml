@@ -4,6 +4,7 @@ project_name: goreleaser-aws-lambda-example
 env:
   - CGO_ENABLED=0
   - GITHUB_RUN_ATTEMPT={{- if .Env.GITHUB_RUN_ATTEMPT }}{{ .Env.GITHUB_RUN_ATTEMPT }}{{- else }}0{{- end }}
+  - S3_BUCKET={{- if .Env.S3_BUCKET }}{{ .Env.S3_BUCKET }}{{- else }}goreleaser-s3-bucket{{- end }}
 
 builds:
   # You can have multiple builds defined as a yaml list
@@ -111,6 +112,19 @@ release:
     ## Credits 
     
     Thank you for your contribution.
+
+blobs:
+  -
+    provider: s3
+    bucket: "{{ .Env.S3_BUCKET }}"
+
+    # IDs of the artifacts you want to upload.
+    ids:
+    - archive
+
+    # Template for the path/name inside the bucket.
+    # Default is `{{ .ProjectName }}/{{ .Tag }}`
+    folder: "{{ .ProjectName }}/{{ .Version }}-{{ .Env.GITHUB_RUN_ATTEMPT }}"
 
 checksum:
   name_template: checksums_v{{ .Version }}{{- if .Env.GITHUB_RUN_ATTEMPT }}-{{ .Env.GITHUB_RUN_ATTEMPT }}{{- end }}.txt
