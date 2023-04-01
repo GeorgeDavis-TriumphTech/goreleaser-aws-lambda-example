@@ -5,7 +5,10 @@ version = 0.1
 [default]
 [default.global]
 [default.global.parameters]
+region = "us-east-1"
 stack_name = "goreleaser-aws-lambda-example"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1vvjrqhfrldd6"
+s3_prefix = "goreleaser-aws-lambda-example"
 
 [default.build]
 [default.build.parameters]
@@ -19,10 +22,7 @@ lint = true
 [default.deploy]
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
-confirm_changeset = true
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1vvjrqhfrldd6"
-s3_prefix = "goreleaser-aws-lambda-example"
-region = "us-east-1"
+confirm_changeset = false
 image_repositories = []
 
 [default.sync]
