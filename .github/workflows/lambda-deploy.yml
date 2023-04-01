@@ -110,7 +110,7 @@ jobs:
       - name: SAM Deploy
         run: |
           sam deploy --config-env default --parameter-overrides \ 
-          ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} \
-          ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} \
-          ParameterKey=AppReleasePath,ParameterValue=${{ steps.buildpath.outputs.built_path }} \
-          --no-confirm-changeset --no-fail-on-empty-changeset"
+          AppVersion=${{ github.ref_name }}-${{ github.run_attempt }} \
+          AppName=${{ steps.splitstr.outputs.repo_name }} \
+          AppReleasePath=${{ steps.buildpath.outputs.built_path }} \
+          --no-confirm-changeset --no-fail-on-empty-changeset
