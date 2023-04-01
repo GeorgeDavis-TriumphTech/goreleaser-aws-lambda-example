@@ -26,11 +26,7 @@ Resources:
   GoReleaserExampleFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: !Join
-        - "/"
-        - - '.'
-        - - !Ref AppReleaseFolder
-        - - !Ref AppReleaseFileName
+      CodeUri: .
       Handler: main
       Runtime: go1.x
       Architectures:
@@ -40,10 +36,10 @@ Resources:
           APP_VERSION: !Ref AppVersion
           APP_NAME: !Ref AppName
           APP_RELEASE: !Join
-            - "/"
-            - - '.'
-            - - !Ref AppReleaseFolder
-            - - !Ref AppReleaseFileName
+          - '/'
+          - - '.'
+            - !Ref AppReleaseFolder
+            - !Ref AppReleaseFileName
 
 Outputs:
   GoReleaserExampleFunction:
