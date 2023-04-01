@@ -21,6 +21,7 @@ permissions:
 
 env:
   SAM_CLI_TELEMETRY: 0
+  AWS_REGION: 'us-east-1'
 
 jobs:
   goreleaser:
@@ -66,25 +67,7 @@ jobs:
         id: splitstr
         run: echo "repo_name=${GITHUB_REPO##*/}" >> $GITHUB_OUTPUT
 
-      - name: Run Go Releaser
-        id: goreleaser
-        uses: goreleaser/goreleaser-action@v4
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
-
-      - name: Get Archive Path
-        id: zipname
-        run: |
-          echo "built_file=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .name)[]' dist/artifacts.json`" >> $GITHUB_OUTPUT
-
-      - name: Print Archive Path
-        run: echo ${{ steps.zipname.outputs.built_file }}
-
+      # Prepare AWS env for build, release and deploy
       - name: Setup Python for SAM CLI
         uses: actions/setup-python@v4.5.0
         with:
@@ -96,8 +79,32 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
           role-to-assume: arn:aws:iam::703730886047:role/github-actions-georgedavis-triumphtech
+
+      - name: Prepare S3
+        run: |
+          aws s3 mb ${{ steps.splitstr.outputs.repo_name }}
+          
+      - name: Run Go Releaser and Upload to S3
+        id: goreleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          S3_BUCKET: ${{ steps.splitstr.outputs.repo_name }}
+
+      - name: Get Archive Path
+        id: zipname
+        run: |
+          echo "built_file=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .name)[]' dist/artifacts.json`" >> $GITHUB_OUTPUT
+
+      - name: Print Archive Path
+        run: echo ${{ steps.zipname.outputs.built_file }}
 
       - name: SAM Build
         run: sam build # --use-container
@@ -110,4 +117,4 @@ jobs:
 
       - name: SAM Deploy
         run: |
-          sam deploy --config-env default --parameter-overrides ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseFileName,ParameterValue=${{ steps.zipname.outputs.built_file }} --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
+          sam deploy --config-env default --parameter-overrides ParameterKey=region,ParameterValue=${{ env.AWS_REGION }} ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseFileName,ParameterValue=${{ steps.zipname.outputs.built_file }} --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
