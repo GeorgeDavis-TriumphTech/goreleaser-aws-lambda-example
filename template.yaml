@@ -29,6 +29,7 @@ Resources:
     Properties:
       CodeUri: !Join
         - "/"
+        - - '.'
         - - !Ref AppReleaseFolder
         - - !Ref AppReleaseFileName
       Handler: main
