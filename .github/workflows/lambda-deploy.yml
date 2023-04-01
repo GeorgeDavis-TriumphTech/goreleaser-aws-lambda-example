@@ -78,14 +78,12 @@ jobs:
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
       - name: Get Archive Path
-        id: buildpath
+        id: zipname
         run: |
-          jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json > raw_dist_path
-          sed 's/\//\\\//g' raw_dist_path > dist_path
-          echo "built_path=`cat dist_path`" >> $GITHUB_OUTPUT
+          echo "built_file=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .name)[]' dist/artifacts.json`" >> $GITHUB_OUTPUT
 
       - name: Print Archive Path
-        run: echo ${{ steps.buildpath.outputs.built_path }}
+        run: echo ${{ steps.zipname.outputs.built_file }}
 
       - name: Setup Python for SAM CLI
         uses: actions/setup-python@v4.5.0
@@ -112,5 +110,5 @@ jobs:
           sam deploy --config-env default --parameter-overrides \ 
           AppVersion=${{ github.ref_name }}-${{ github.run_attempt }} \
           AppName=${{ steps.splitstr.outputs.repo_name }} \
-          AppReleasePath=${{ steps.buildpath.outputs.built_path }} \
+          AppReleaseFileName=${{ steps.zipname.outputs.built_file }} \
           --no-confirm-changeset --no-fail-on-empty-changeset
