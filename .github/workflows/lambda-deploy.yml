@@ -105,10 +105,13 @@ jobs:
       - name: SAM Build
         run: sam build # --use-container
 
+      - name: SAM Package
+        run: sam package --config-env default > packaged-template.yml
+
       - name: SAM Deploy
         run: |
           sam deploy --config-env default --parameter-overrides \ 
           AppVersion=${{ github.ref_name }}-${{ github.run_attempt }} \
           AppName=${{ steps.splitstr.outputs.repo_name }} \
           AppReleaseFileName=${{ steps.zipname.outputs.built_file }} \
-          --no-confirm-changeset --no-fail-on-empty-changeset
+          --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yml
