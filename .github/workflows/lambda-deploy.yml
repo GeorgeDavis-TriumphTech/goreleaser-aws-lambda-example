@@ -81,7 +81,7 @@ jobs:
         id: buildpath
         run: |
           export built_path=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .path)[]' dist/artifacts.json`
-          echo "built_path=$($built_path | sed 's/\//\\\//g')" >> $GITHUB_OUTPUT
+          echo "built_path=`$built_path | sed 's/\//\\\//g')`" >> $GITHUB_OUTPUT
 
       - name: Print Archive Path
         run: echo ${{ steps.buildpath.outputs.built_path }}
