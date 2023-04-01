@@ -1,7 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  goreleaser-aws-lambda-example
+Description: goreleaser-aws-lambda-example
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -40,6 +39,11 @@ Resources:
         Variables:
           APP_VERSION: !Ref AppVersion
           APP_NAME: !Ref AppName
+          APP_RELEASE: !Join
+            - "/"
+            - - '.'
+            - - !Ref AppReleaseFolder
+            - - !Ref AppReleaseFileName
 
 Outputs:
   GoReleaserExampleFunction:
