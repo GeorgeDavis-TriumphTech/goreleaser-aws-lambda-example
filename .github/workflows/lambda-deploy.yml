@@ -109,7 +109,7 @@ jobs:
       - name: Print Archive Path
         id: s3key
         run: |
-          echo "archive_path=${{ steps.splitstr.outputs.repo_name }}/${{ github.ref_name }}-${{ github.run_attempt }}/${{ steps.zipname.outputs.built_file }}" >> $GITHUB_OUTPUT
+          echo "archive_path=${{ steps.splitstr.outputs.repo_name }}/${{ steps.splitstr.outputs.repo_name }}/${{ github.ref_name }}-${{ github.run_attempt }}/${{ steps.zipname.outputs.built_file }}" >> $GITHUB_OUTPUT
 
       - name: SAM Build
         run: sam build # --use-container
@@ -121,5 +121,4 @@ jobs:
         run: sam validate --lint # --template-file packaged-template.yaml
 
       - name: SAM Deploy
-        run: |
-          sam deploy --config-env default --parameter-overrides ParameterKey=region,ParameterValue=${{ env.AWS_REGION }} ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseS3FilePath,ParameterValue=${{ steps.s3key.outputs.archive_path }} --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
+        run: sam deploy --config-env default --parameter-overrides ParameterKey=region,ParameterValue=${{ env.AWS_REGION }} ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseS3FilePath,ParameterValue=${{ steps.s3key.outputs.archive_path }} --no-confirm-changeset --no-fail-on-empty-changeset # --template-file packaged-template.yaml
