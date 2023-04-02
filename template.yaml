@@ -15,10 +15,7 @@ Parameters:
   AppName:
     Type: String
     Default: app-name
-  AppReleaseFolder:
-    Type: String
-    Default: dist
-  AppReleaseFileName:
+  AppReleaseS3FilePath:
     Type: String
     Default: example.zip
 
@@ -26,7 +23,7 @@ Resources:
   GoReleaserExampleFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: .
+      CodeUri: !Ref AppReleaseS3FilePath
       Handler: main
       Runtime: go1.x
       Architectures:
@@ -35,7 +32,7 @@ Resources:
         Variables:
           APP_VERSION: !Ref AppVersion
           APP_NAME: !Ref AppName
-          APP_RELEASE: !Sub "./${AppReleaseFolder}/${AppReleaseFileName}"
+          APP_RELEASE: !Ref AppReleaseS3FilePath
 
 Outputs:
   GoReleaserExampleFunction:
