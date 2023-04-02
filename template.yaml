@@ -29,7 +29,7 @@ Resources:
       CodeUri:
         Bucket: !Ref AppReleaseS3Bucket
         Key: !Ref AppReleaseS3Key
-      Handler: main
+      Handler: !Ref AppName
       Runtime: go1.x
       Architectures:
         - x86_64
