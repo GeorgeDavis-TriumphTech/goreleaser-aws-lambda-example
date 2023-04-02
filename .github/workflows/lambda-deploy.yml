@@ -82,9 +82,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: arn:aws:iam::703730886047:role/github-actions-georgedavis-triumphtech
 
-      - name: Prepare S3
+      - name: Prepare S3 Bucket
         run: |
           aws s3 mb s3://${{ steps.splitstr.outputs.repo_name }}
+          aws s3api put-public-access-block \
+            --bucket ${{ steps.splitstr.outputs.repo_name }} \
+            --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
       - name: Run Go Releaser and Upload to S3
         id: goreleaser
@@ -104,7 +107,9 @@ jobs:
           echo "built_file=`jq -cr 'map(select(.type | contains("Archive")) | select(.goarch) | .name)[]' dist/artifacts.json`" >> $GITHUB_OUTPUT
 
       - name: Print Archive Path
-        run: echo ${{ steps.zipname.outputs.built_file }}
+        id: s3key
+        run: |
+          echo "archive_path=${{ steps.splitstr.outputs.repo_name }}/${{ github.ref_name }}-${{ github.run_attempt }}/${{ steps.zipname.outputs.built_file }}" >> $GITHUB_OUTPUT
 
       - name: SAM Build
         run: sam build # --use-container
@@ -117,4 +122,4 @@ jobs:
 
       - name: SAM Deploy
         run: |
-          sam deploy --config-env default --parameter-overrides ParameterKey=region,ParameterValue=${{ env.AWS_REGION }} ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseFileName,ParameterValue=${{ steps.zipname.outputs.built_file }} --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
+          sam deploy --config-env default --parameter-overrides ParameterKey=region,ParameterValue=${{ env.AWS_REGION }} ParameterKey=AppVersion,ParameterValue=${{ github.ref_name }}-${{ github.run_attempt }} ParameterKey=AppName,ParameterValue=${{ steps.splitstr.outputs.repo_name }} ParameterKey=AppReleaseS3FilePath,ParameterValue=${{ steps.s3key.outputs.archive_path }} --no-confirm-changeset --no-fail-on-empty-changeset --template-file packaged-template.yaml
