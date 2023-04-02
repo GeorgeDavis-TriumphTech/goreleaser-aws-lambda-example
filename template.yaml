@@ -15,7 +15,10 @@ Parameters:
   AppName:
     Type: String
     Default: app-name
-  AppReleaseS3FilePath:
+  AppReleaseS3Bucket:
+    Type: String
+    Default: goreleaser-s3-bucket
+  AppReleaseS3Key:
     Type: String
     Default: example.zip
 
@@ -23,7 +26,10 @@ Resources:
   GoReleaserExampleFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: !Sub 's3://${AppReleaseS3FilePath}'
+      CodeUri: 
+        FunctionCode:
+          Bucket: !Ref AppReleaseS3Bucket
+          Key: !Ref AppReleaseS3Key
       Handler: main
       Runtime: go1.x
       Architectures:
@@ -32,7 +38,8 @@ Resources:
         Variables:
           APP_VERSION: !Ref AppVersion
           APP_NAME: !Ref AppName
-          APP_RELEASE: !Sub 's3://${AppReleaseS3FilePath}'
+          APP_S3_BUCKET: !Ref AppReleaseS3Bucket
+          APP_S3_KEY: !Ref AppReleaseS3Key
 
 Outputs:
   GoReleaserExampleFunction:
