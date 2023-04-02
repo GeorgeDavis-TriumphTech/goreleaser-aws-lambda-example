@@ -114,11 +114,11 @@ jobs:
       - name: SAM Build
         run: sam build # --use-container
 
-      - name: SAM Package
-        run: sam package --config-env default > packaged-template.yaml
+      # - name: SAM Package
+      #   run: sam package --config-env default > packaged-template.yaml
 
       - name: Validate SAM template
-        run: sam validate --lint --template-file packaged-template.yaml
+        run: sam validate --lint # --template-file packaged-template.yaml
 
       - name: SAM Deploy
         run: |
